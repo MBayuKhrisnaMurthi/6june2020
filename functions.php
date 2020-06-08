@@ -34,5 +34,28 @@ function register($data){
     mysqli_query($conn, "INSERT INTO users VALUES('','$username','$password')");
     return mysqli_affected_rows($conn);
 }
+
+function login($data){
+    global $conn;
+    $username = $data["username"];
+    $password = $data["password"];
+
+    //cek username ada didatabase atau belum
+    $result = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username'");
+    if (mysqli_num_rows($result) === 1) {
+
+        //cek password
+        $row = mysqli_fetch_assoc($result);
+        
+        if (password_verify($password, $row["password"])) {
+            echo "<script>
+                alert('Berhasil Masuk');
+                document.location.href='index.php'; 
+            </script>";
+            exit;
+        }
+    }
+    return $error = true;
+}
  
 ?>
